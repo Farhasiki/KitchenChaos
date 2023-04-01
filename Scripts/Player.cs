@@ -14,14 +14,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
-    private const float EPS = 1e-3f;//微小偏移量
-
-    private Vector3 lastInteractDir;
-    private bool isWalking = false;
-    private BaseCounter selectedCounter;
-    
     [SerializeField] private Transform kitchenObjectHoldPoint;//接收物品位置
 
+    private const float EPS = 1e-3f;//微小偏移量
+    private Vector3 lastInteractDir;// 上一次交互方向
+    private bool isWalking = false;//正在移动
+    private BaseCounter selectedCounter; // 选中的柜台
     private KitchenObject kitchenObject;//手里的物品
 
     private void Awake() {
@@ -30,8 +28,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         }
         Instance = this;
     }
+
     private void Start() {
         gameInput.OnInteractAction += GameInput_OnInteractAction;//注册
+        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;// 注册
+    }
+    
+    private void GameInput_OnInteractAlternateAction(object sender, EventArgs e){
+        if(selectedCounter != null){
+            selectedCounter.InteractAlternate(this);
+        }
     }
 
     private void GameInput_OnInteractAction(object sender, EventArgs e){

@@ -28,9 +28,32 @@ public class KitchenObject : MonoBehaviour
         //修改物理位置
         transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();//更改父物体
         transform.localPosition = Vector3.zero;//更改坐标
+        transform.rotation = Quaternion.identity;
     }
     public IKitchenObjectParent GetKitchenObjectParent(){
         return this.kitchenObjectParent;
+    }
+
+    public void DestroySelf(){
+        GetKitchenObjectParent().ClearKitchenObject();
+
+        Destroy(gameObject);
+    }
+    
+    /// <summary>
+    /// 静态方法
+    /// 物品类生成物品到指定的位置非实体
+    /// </summary>
+    /// <param name="kitchenObjectSO">要生成的物品信息</param>
+    /// <param name="kitchenObjectParent">生成位置</param>
+    /// <returns>生成的物体</returns>
+    public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent){
+        Transform kitchenObjectransform = Instantiate(kitchenObjectSO.prefab);
+        KitchenObject kitchenObject = kitchenObjectransform.GetComponent<KitchenObject>();
+        
+        kitchenObject.SetKitchenObjectParent(kitchenObjectParent);//生成物品到物体载体上
+
+        return kitchenObject;
     }
 
 }

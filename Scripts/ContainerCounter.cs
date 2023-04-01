@@ -10,9 +10,10 @@ public class ContainerCounter : BaseCounter{
     /// </summary>
     public override void Interact(Player player){
         if(player.HaskitchenObject())return ;// (Player is carrying something) 玩家正拿着东西
-        Transform kitchenObjectransform = Instantiate(kitchenObjectOS.prefab);
-        kitchenObjectransform.GetComponent<KitchenObject>().SetKitchenObjectParent(player);//生成物品
+
+        KitchenObject.SpawnKitchenObject(kitchenObjectOS,player);
+        
         OnPlayerGrabbedObject?.Invoke(this,EventArgs.Empty);
-    }
+    } 
     
 }

@@ -7,7 +7,12 @@ public class BaseCounter : MonoBehaviour,IKitchenObjectParent
     [SerializeField] private Transform counterTopPoint;//生成物品位置
     private KitchenObject kitchenObject;//当前柜台上放的物品
     
-    public virtual void Interact(Player player){}
+    public virtual void Interact(Player player){
+        Debug.Log("BaseCounter.Interact ");
+    }
+    public virtual void InteractAlternate(Player player){
+        Debug.Log("BaseCounter.InteractAlternate ");
+    }
 
     public Transform GetKitchenObjectFollowTransform(){
         return counterTopPoint;
