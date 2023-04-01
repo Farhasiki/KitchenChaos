@@ -87,26 +87,19 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         bool canMove = !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDir,moveDistance);
         
         //处理移动方向
-        if(!canMove){
-            // 目标方向不能移动
-
+        if(!canMove){ // 目标方向不能移动
             //分解移动向量 尝试向X方向移动
             Vector3 moveDirX = new Vector3(moveDir.x,0,0).normalized;
-            canMove = !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirX,moveDistance);
-            if(canMove){
-                //可以在X方向移动
+            canMove = moveDirX.x != 0 && !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirX,moveDistance);
+            if(canMove){ //可以在X方向移动
                 moveDir = moveDirX;
-            }else{
-                //X 方向不能行走
-
+            }else{ //X 方向不能行走
                 //尝试向Z轴运动
                 Vector3 moveDirZ = new Vector3(0,0,moveDir.z).normalized;
-                canMove = !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirZ,moveDistance);
-                if(canMove){
-                    //可以向Z方向移动
+                canMove = moveDirZ.z != 0 && !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirZ,moveDistance);
+                if(canMove){ //可以向Z方向移动
                     moveDir = moveDirZ;
-                }else{
-                    //两个方向都不能移动
+                }else{ //两个方向都不能移动
                 }
             }
         }
