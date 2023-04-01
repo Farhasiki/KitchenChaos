@@ -9,11 +9,13 @@ public class ContainerCounter : BaseCounter{
     /// 交互
     /// </summary>
     public override void Interact(Player player){
-        if(player.HaskitchenObject())return ;// (Player is carrying something) 玩家正拿着东西
+        if(!player.HaskitchenObject()){
+            // (Player is not carrying something) 玩家正拿着东西
 
-        KitchenObject.SpawnKitchenObject(kitchenObjectOS,player);
-        
-        OnPlayerGrabbedObject?.Invoke(this,EventArgs.Empty);
+            KitchenObject.SpawnKitchenObject(kitchenObjectOS,player);
+            
+            OnPlayerGrabbedObject?.Invoke(this,EventArgs.Empty);
+        }
     } 
     
 }
