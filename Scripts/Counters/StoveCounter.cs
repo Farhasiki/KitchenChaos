@@ -1,18 +1,76 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class StoveCounter : BaseCounter{
-    [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;// 切菜品的食谱
+    [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;// 煎炸的食谱
+    [SerializeField] private BurningRecipeSO [] burningRecipeArray;// 烧焦的食谱
 
-    // public event EventHandler<OnProgressChangeEventArgs> OnProgressChange;
-    // public event EventHandler OnPlayerCuttingObject;
+    public event EventHandler<OnStateChangeEventArgs> OnStateChange;
 
-    // public class OnProgressChangeEventArgs : EventArgs{
-    //     public float progressNormalized;
-    // }
+    public class OnStateChangeEventArgs : EventArgs{
+        public State state;
+    }
 
-    private int fryingProgress = 0;
+    public enum State{ //煎锅当前状态
+        Idle,
+        Frying,
+        Fried,
+        Burned,
+    }
+    private FryingRecipeSO fryingRecipeSO = null;//油炸配方
+    private BurningRecipeSO  burningRecipeSO = null;//油炸配方
+    private State state;
+    private float fryingTimer = 0;//油炸计时器
+    private float burningTimer = 0;//烧焦计时器
+
+    private void Start() {
+        state = State.Idle;
+    }
+    private void Update() {
+        if(HaskitchenObject()){ // 如果当前厨具上有食材或食物
+            switch (state){
+                case State.Idle: // 空闲状态
+                    break;
+                case State.Frying://烹饪状态
+                    fryingTimer += Time.deltaTime; // 烹饪计时器自增
+
+                    if(fryingTimer >= fryingRecipeSO.maxFryingTimer){ // 如果烹饪时间超过最大烹饪时间
+                        GetKitchenObject().DestroySelf(); // 销毁当前厨具上的食材或食物
+
+                        // 根据烹饪食谱生成烹饪完成的食物
+                        KitchenObject kitchenObject = KitchenObject.SpawnKitchenObject(fryingRecipeSO.output,this);
+
+                        state = State.Fried; // 切换到炒熟状态
+                        OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
+                            state = state
+                        });
+                        burningTimer = 0; // 重置烧焦计时器
+                        burningRecipeSO = GetBurningRecipeSOFromInput(kitchenObject.GetKitchenObjectSO()); // 获取下一个食物烧焦所需的食谱
+                    }
+                    break;
+                case State.Fried: // 炒熟状态
+                    burningTimer += Time.deltaTime; // 烧焦计时器自增
+
+                    if(burningTimer >= burningRecipeSO.maxBurningTimer){ // 如果烧焦时间超过最大烧焦时间
+                        GetKitchenObject().DestroySelf(); // 销毁当前厨具上的食物
+
+                        KitchenObject.SpawnKitchenObject(burningRecipeSO.output,this); // 根据食谱生成烧焦的食物
+                        
+                        state = State.Burned; // 切换到烧焦状态
+
+                        OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
+                            state = state
+                        });
+                    }
+                    break;
+                case State.Burned: // 烧焦状态
+                    break;
+            }
+        }
+        Debug.Log(state); // 打印当前状态
+    }
     public override void Interact(Player player){
         // (Same method)意义同上方
         if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
@@ -20,10 +78,19 @@ public class StoveCounter : BaseCounter{
                 if(HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())){// (KitchenObject has Recipe) 有食谱的放到菜板上
                     // (Put kitchenObject on counter)将物品放到柜台上
                     player.GetKitchenObject().SetKitchenObjectParent(this);
+                    fryingTimer = 0;
+                    state = State.Frying;
+                    fryingRecipeSO = GetFryingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
+
+                    OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
+                        state = state
+                    });
                 }
             }else{// (There is a KitchenObject here)柜台上有物品
                 // (Put kitchenObject on player)将物品放到玩家手中
                 GetKitchenObject().SetKitchenObjectParent(player);
+
+                state = State.Idle;
             }
         }else{//(Both had something or not) 都有物品或者都没有
             // Do nothing
@@ -43,7 +110,7 @@ public class StoveCounter : BaseCounter{
                 // (There is a KitchenObject here and KitchenObject can be cutting)柜台上有物品 并且可以被切
                 // (Cut the KitchenObject) 切物品
 
-                FryingRecipeSO fryingRecipeSO = GetFryingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
+                fryingRecipeSO = GetFryingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
                     KitchenObjectSO outputKitchenObject = GetOutputFromInput(GetKitchenObject().GetKitchenObjectSO());
 
                     GetKitchenObject().DestroySelf();
@@ -78,6 +145,14 @@ public class StoveCounter : BaseCounter{
         foreach(FryingRecipeSO fryingRecipeSO in fryingRecipeSOArray){
             if(fryingRecipeSO.input == inputKitchenObjectSO){
                 return fryingRecipeSO;
+            }
+        }
+        return null;
+    }
+    private BurningRecipeSO GetBurningRecipeSOFromInput(KitchenObjectSO inputKitchenObjectSO){
+        foreach(BurningRecipeSO burningRecipeSO in burningRecipeArray){
+            if(burningRecipeSO.input == inputKitchenObjectSO){
+                return burningRecipeSO;
             }
         }
         return null;
