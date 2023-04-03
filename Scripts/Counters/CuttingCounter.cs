@@ -3,17 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CuttingCounter: BaseCounter{
+public class CuttingCounter: BaseCounter, IHasProgress{
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray;// 切菜品的食谱
 
-    public event EventHandler<OnProgressChangeEventArgs> OnProgressChange;
-    public event EventHandler OnPlayerCuttingObject;
-
-    public class OnProgressChangeEventArgs : EventArgs{
-        public float progressNormalized;
-    }
-
     private int cuttingProgress = 0;
+    public event EventHandler OnPlayerCuttingObject;
+    public event EventHandler<IHasProgress.OnProgressChangeEventArgs> OnProgressChange;
     public override void Interact(Player player){
         // (Same method)意义同上方
         if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
@@ -45,11 +40,11 @@ public class CuttingCounter: BaseCounter{
                 // (There is a KitchenObject here and KitchenObject can be cutting)柜台上有物品 并且可以被切
                 // (Cut the KitchenObject) 切物品
 
+                CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());//获取切菜食谱
+                
                 cuttingProgress ++;
                 OnPlayerCuttingObject?.Invoke(this,EventArgs.Empty);
-
-                CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
-                OnProgressChange?.Invoke(this,new OnProgressChangeEventArgs{// 触发事件
+                OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{// 触发事件
                     progressNormalized = cuttingProgress * 1f / cuttingRecipeSO.maxCuttingProgress
                 });
 

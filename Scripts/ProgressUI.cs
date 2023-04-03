@@ -6,15 +6,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ProgressUI : MonoBehaviour{
-    [SerializeField] CuttingCounter cuttingCounter;
+    [SerializeField] GameObject hasProgressObject;
+    private IHasProgress hasProgress;
     [SerializeField] Image progressBar;
     private void Start() {
-        cuttingCounter.OnProgressChange += CuttingCounter_OnprogessChange;
+        hasProgress = hasProgressObject.GetComponent<IHasProgress>();
+        if(hasProgress == null){
+            Debug.LogError("The object" + hasProgressObject + "does not have IHasProgress");
+        }
+        hasProgress.OnProgressChange += CuttingCounter_OnprogessChange;
 
         progressBar.fillAmount = 0f;
         Hide();
     }
-    private void CuttingCounter_OnprogessChange(object sender, CuttingCounter.OnProgressChangeEventArgs e){
+    private void CuttingCounter_OnprogessChange(object sender, IHasProgress.OnProgressChangeEventArgs e){
         progressBar.fillAmount = e.progressNormalized;
 
         if(progressBar.fillAmount == 0 || progressBar.fillAmount == 1){

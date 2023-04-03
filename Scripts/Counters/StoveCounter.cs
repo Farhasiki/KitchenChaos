@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class StoveCounter : BaseCounter{
+public class StoveCounter : BaseCounter, IHasProgress{
     [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;// 煎炸的食谱
     [SerializeField] private BurningRecipeSO [] burningRecipeArray;// 烧焦的食谱
 
+    public event EventHandler<IHasProgress.OnProgressChangeEventArgs> OnProgressChange;
     public event EventHandler<OnStateChangeEventArgs> OnStateChange;
-
     public class OnStateChangeEventArgs : EventArgs{
         public State state;
     }
@@ -35,6 +35,9 @@ public class StoveCounter : BaseCounter{
                     break;
                 case State.Frying://烹饪状态
                     fryingTimer += Time.deltaTime; // 烹饪计时器自增
+                    OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                        progressNormalized = fryingTimer / fryingRecipeSO.maxFryingTimer
+                    });
 
                     if(fryingTimer >= fryingRecipeSO.maxFryingTimer){ // 如果烹饪时间超过最大烹饪时间
                         GetKitchenObject().DestroySelf(); // 销毁当前厨具上的食材或食物
@@ -52,6 +55,9 @@ public class StoveCounter : BaseCounter{
                     break;
                 case State.Fried: // 炒熟状态
                     burningTimer += Time.deltaTime; // 烧焦计时器自增
+                    OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                        progressNormalized = burningTimer / burningRecipeSO.maxBurningTimer
+                    });
 
                     if(burningTimer >= burningRecipeSO.maxBurningTimer){ // 如果烧焦时间超过最大烧焦时间
                         GetKitchenObject().DestroySelf(); // 销毁当前厨具上的食物
@@ -62,6 +68,9 @@ public class StoveCounter : BaseCounter{
 
                         OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
                             state = state
+                        });
+                        OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                            progressNormalized = 0f
                         });
                     }
                     break;
@@ -85,6 +94,9 @@ public class StoveCounter : BaseCounter{
                     OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
                         state = state
                     });
+                    OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                        progressNormalized = fryingTimer / fryingRecipeSO.maxFryingTimer
+                    });
                 }
             }else{// (There is a KitchenObject here)柜台上有物品
                 // (Put kitchenObject on player)将物品放到玩家手中
@@ -100,25 +112,28 @@ public class StoveCounter : BaseCounter{
     /// <summary>
     /// 切菜交互
     /// </summary>
-    public override void InteractAlternate(Player player){
-        // (Same method)意义同上方
-        if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
-            if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
+    // public override void InteractAlternate(Player player){
+    //     // (Same method)意义同上方
+    //     if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
+    //         if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
                
 
-            }else if(GetKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())){
-                // (There is a KitchenObject here and KitchenObject can be cutting)柜台上有物品 并且可以被切
-                // (Cut the KitchenObject) 切物品
+    //         }else if(GetKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())){
+    //             // (There is a KitchenObject here and KitchenObject can be cutting)柜台上有物品 并且可以被切
+    //             // (Cut the KitchenObject) 切物品
 
-                fryingRecipeSO = GetFryingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
-                    KitchenObjectSO outputKitchenObject = GetOutputFromInput(GetKitchenObject().GetKitchenObjectSO());
+    //             fryingRecipeSO = GetFryingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
+    //             KitchenObjectSO outputKitchenObject = GetOutputFromInput(GetKitchenObject().GetKitchenObjectSO());
 
-                    GetKitchenObject().DestroySelf();
+    //             GetKitchenObject().DestroySelf();
 
-                    KitchenObject.SpawnKitchenObject(outputKitchenObject,this);
-            }
-        }
-    }
+    //             KitchenObject.SpawnKitchenObject(outputKitchenObject,this);
+    //             OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+    //                 progressNormalized = fryingTimer / fryingRecipeSO.maxFryingTimer
+    //             });
+    //         }
+    //     }
+    // }
     /// <summary>
     /// 检查放入食物是否有效
     /// </summary>
