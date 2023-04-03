@@ -12,7 +12,6 @@ public class StoveCounter : BaseCounter, IHasProgress{
     public class OnStateChangeEventArgs : EventArgs{
         public State state;
     }
-
     public enum State{ //煎锅当前状态
         Idle,
         Frying,
@@ -78,7 +77,6 @@ public class StoveCounter : BaseCounter, IHasProgress{
                     break;
             }
         }
-        Debug.Log(state); // 打印当前状态
     }
     public override void Interact(Player player){
         // (Same method)意义同上方
@@ -103,6 +101,13 @@ public class StoveCounter : BaseCounter, IHasProgress{
                 GetKitchenObject().SetKitchenObjectParent(player);
 
                 state = State.Idle;
+
+                OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
+                    state = state
+                });
+                OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                    progressNormalized = 0f
+                });
             }
         }else{//(Both had something or not) 都有物品或者都没有
             // Do nothing

@@ -20,7 +20,12 @@ public class CuttingCounter: BaseCounter, IHasProgress{
                 }
             }else{// (There is a KitchenObject here)柜台上有物品
                 // (Put kitchenObject on player)将物品放到玩家手中
+
                 GetKitchenObject().SetKitchenObjectParent(player);
+
+                OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{// 触发事件
+                    progressNormalized = 0f
+                });
             }
         }else{//(Both had something or not) 都有物品或者都没有
             // Do nothing
