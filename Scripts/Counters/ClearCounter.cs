@@ -10,7 +10,20 @@ public class ClearCounter : BaseCounter {
     public override void Interact(Player player){
         if(HaskitchenObject()){// (There is a KitchenObject here)柜台上有物品
             if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
-                // Do nothing
+                if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
+                    // (Player is carrying plate) 玩家拿着盘子
+                    if(plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())){
+                        //添加到盘子中
+                        GetKitchenObject().DestroySelf();
+                    }
+                }else{// (Player is carrying other something) 玩家拿着其他东西
+                    if(GetKitchenObject().TryGetPlate(out plateKitchenObject)){
+                        // (The Plate is on Counter) 桌子上有盘子
+                        if(plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO())){
+                            player.GetKitchenObject().DestroySelf();
+                        }
+                    }
+                }
             }else{// (Player not carrying anything)玩家手上没有物品
                 // (Put kitchenObject on player)将物品放到玩家手中
                 GetKitchenObject().SetKitchenObjectParent(player);
@@ -23,19 +36,5 @@ public class ClearCounter : BaseCounter {
                 // (Do nothing)什么都不做
             }
         }
-        /*
-            // (Same method)意义同上方
-            if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
-                if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
-                    // (Put kitchenObject on counter)将物品放到柜台上
-                    player.GetKitchenObject().SetKitchenObjectParent(this);
-                }else{// (There is a KitchenObject here)柜台上有物品
-                    // (Put kitchenObject on player)将物品放到玩家手中
-                    GetKitchenObject().SetKitchenObjectParent(player);
-                }
-            }else{//(Both had something or not) 都有物品或者都没有
-                // Do nothing
-            } 
-        */  
     }
 }

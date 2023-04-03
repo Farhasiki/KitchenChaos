@@ -11,6 +11,16 @@ public class KitchenObject : MonoBehaviour
         return kitchenObjectSO;
     }
 
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject){
+        if(this is PlateKitchenObject){
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }else{
+            plateKitchenObject = null;
+            return false;
+        }
+    }
+
     /// <summary>
     /// 设置物体的位置
     /// </summary>
@@ -55,5 +65,6 @@ public class KitchenObject : MonoBehaviour
 
         return kitchenObject;
     }
+
 
 }

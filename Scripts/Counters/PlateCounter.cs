@@ -24,7 +24,7 @@ public class PlateCounter : BaseCounter{
             }
         }
     }
-
+ 
     public override void Interact(Player player)
     {
         if(!player.HaskitchenObject()){// (Player has no KtichenObject)玩家空手

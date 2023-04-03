@@ -79,8 +79,39 @@ public class StoveCounter : BaseCounter, IHasProgress{
         }
     }
     public override void Interact(Player player){
-        // (Same method)意义同上方
-        if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
+        if(this.HaskitchenObject() ){// ( Counter has something) 柜台有有物品
+            if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
+                if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
+                    // (Player is carrying plate) 玩家拿着盘子
+                    if(plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())){
+                        //添加到盘子中
+                        GetKitchenObject().DestroySelf();
+
+                        state = State.Idle;
+
+                        OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
+                            state = state
+                        });
+                        OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                            progressNormalized = 0f
+                        });
+                    }
+                }
+                
+            }else{// (Player is carrying nothing)玩家无物品
+                // (Put kitchenObject on player)将物品放到玩家手中
+                GetKitchenObject().SetKitchenObjectParent(player);
+
+                state = State.Idle;
+
+                OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
+                    state = state
+                });
+                OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
+                    progressNormalized = 0f
+                });
+            }
+        }else{// (There is nothing on Counter)柜台上无物品
             if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
                 if(HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())){// (KitchenObject has Recipe) 有食谱的放到菜板上
                     // (Put kitchenObject on counter)将物品放到柜台上
@@ -97,48 +128,12 @@ public class StoveCounter : BaseCounter, IHasProgress{
                     });
                 }
             }else{// (There is a KitchenObject here)柜台上有物品
-                // (Put kitchenObject on player)将物品放到玩家手中
-                GetKitchenObject().SetKitchenObjectParent(player);
-
-                state = State.Idle;
-
-                OnStateChange?.Invoke(this, new StoveCounter.OnStateChangeEventArgs{
-                    state = state
-                });
-                OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
-                    progressNormalized = 0f
-                });
+                
+                
             }
-        }else{//(Both had something or not) 都有物品或者都没有
-            // Do nothing
+        
         }  
     }
-
-    /// <summary>
-    /// 切菜交互
-    /// </summary>
-    // public override void InteractAlternate(Player player){
-    //     // (Same method)意义同上方
-    //     if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
-    //         if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
-               
-
-    //         }else if(GetKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())){
-    //             // (There is a KitchenObject here and KitchenObject can be cutting)柜台上有物品 并且可以被切
-    //             // (Cut the KitchenObject) 切物品
-
-    //             fryingRecipeSO = GetFryingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
-    //             KitchenObjectSO outputKitchenObject = GetOutputFromInput(GetKitchenObject().GetKitchenObjectSO());
-
-    //             GetKitchenObject().DestroySelf();
-
-    //             KitchenObject.SpawnKitchenObject(outputKitchenObject,this);
-    //             OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
-    //                 progressNormalized = fryingTimer / fryingRecipeSO.maxFryingTimer
-    //             });
-    //         }
-    //     }
-    // }
     /// <summary>
     /// 检查放入食物是否有效
     /// </summary>

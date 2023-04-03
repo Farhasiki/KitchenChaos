@@ -11,14 +11,17 @@ public class CuttingCounter: BaseCounter, IHasProgress{
     public event EventHandler<IHasProgress.OnProgressChangeEventArgs> OnProgressChange;
     public override void Interact(Player player){
         // (Same method)意义同上方
-        if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
+        if(this.HaskitchenObject()){// (Counter has something) 柜台上有物品
             if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
-                if(HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())){// (KitchenObject has Recipe) 有食谱的放到菜板上
-                    // (Put kitchenObject on counter)将物品放到柜台上
-                    cuttingProgress = 0;
-                    player.GetKitchenObject().SetKitchenObjectParent(this);
+                if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
+                    // (Player is carrying plate) 玩家拿着盘子
+                    if(plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())){
+                        //添加到盘子中
+                        GetKitchenObject().DestroySelf();
+                    }
                 }
-            }else{// (There is a KitchenObject here)柜台上有物品
+                
+            }else{// (Player is carrying nothing)柜台上有物品
                 // (Put kitchenObject on player)将物品放到玩家手中
 
                 GetKitchenObject().SetKitchenObjectParent(player);
@@ -27,8 +30,15 @@ public class CuttingCounter: BaseCounter, IHasProgress{
                     progressNormalized = 0f
                 });
             }
-        }else{//(Both had something or not) 都有物品或者都没有
-            // Do nothing
+        }else{// (There is nothing here)柜台上无物品
+            if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
+                if(HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())){// (KitchenObject has Recipe) 有食谱的放到菜板上
+                    // (Put kitchenObject on counter)将物品放到柜台上
+                    cuttingProgress = 0;
+                    player.GetKitchenObject().SetKitchenObjectParent(this);
+                }
+            }else{// (Player has nothing) 玩家没有物品
+            }
         }  
     }
 
@@ -46,8 +56,8 @@ public class CuttingCounter: BaseCounter, IHasProgress{
                 // (Cut the KitchenObject) 切物品
 
                 CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());//获取切菜食谱
-                
                 cuttingProgress ++;
+
                 OnPlayerCuttingObject?.Invoke(this,EventArgs.Empty);
                 OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{// 触发事件
                     progressNormalized = cuttingProgress * 1f / cuttingRecipeSO.maxCuttingProgress
@@ -58,7 +68,7 @@ public class CuttingCounter: BaseCounter, IHasProgress{
 
                     GetKitchenObject().DestroySelf();
 
-                    KitchenObject.SpawnKitchenObject(outputKitchenObject,this);
+                    SetKitchenObject(KitchenObject.SpawnKitchenObject(outputKitchenObject,this));
                 }
             }
         }
