@@ -34,6 +34,8 @@ public class PlateCounter : BaseCounter{
                 plateSpawnedAmount --;
                 OnPlateRemove?.Invoke(this,EventArgs.Empty);
             }
+        }else{
+            //if(player.GetKitchenObject().TryGetPlate())
         }
     }
 }
