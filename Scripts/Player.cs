@@ -113,7 +113,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         if(canMove)this.transform.position += moveDir * moveDistance;
         
         isWalking = moveDir != Vector3.zero;
-        float rotateSpeed = 15f;
+        float rotateSpeed = 20f;
         this.transform.forward = Vector3.Lerp(this.transform.forward,moveDir + new Vector3(EPS,0,EPS),Time.deltaTime * rotateSpeed);
     }
 

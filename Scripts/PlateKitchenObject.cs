@@ -33,4 +33,8 @@ using System;
             return true;
         }
     }
+
+    public List<KitchenObjectSO> GetKitchenObjectSOList(){
+        return kitchenObjectSOList;
+    }
 }
