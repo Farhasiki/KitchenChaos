@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7722670573966713082, guid: 46c223448a488ac4bbf2dacbef50fada, type: 3}
   sprite: {fileID: 21300000, guid: 3928afb5321bb3d489bbd4ac581b29a2, type: 3}
   objectName: Plate
+  number: 8

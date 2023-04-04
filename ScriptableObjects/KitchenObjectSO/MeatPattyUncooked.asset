@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7722670573966713082, guid: 8df314bf852acb84a9e6d5115a7d409e, type: 3}
   sprite: {fileID: 21300000, guid: aa1bacc24dde76e47b2ec0dd4e82385b, type: 3}
   objectName: MeatPattyUncooked
+  number: 7

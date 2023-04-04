@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7722670573966713082, guid: 668f3ec78d4d67b4cbee38a4f254da42, type: 3}
   sprite: {fileID: 21300000, guid: 549cb4f2b86d1b84d8cd41c1cfde26c8, type: 3}
   objectName: CheeseSlices
+  number: 4

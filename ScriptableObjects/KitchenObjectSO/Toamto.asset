@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7722670573966713082, guid: e8cc46375ea1d214ab9f719cbaf0e1de, type: 3}
   sprite: {fileID: 21300000, guid: 91e8fe3de9249fc44b7bdd8050062896, type: 3}
   objectName: Tomato
+  number: 9

@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7722670573966713082, guid: 286138e381ccbfd478fa1f707b02245e, type: 3}
   sprite: {fileID: 21300000, guid: c9f08c3c1ae2a364aaeaa3712540b1d4, type: 3}
   objectName: Toamto Slices
+  number: 10

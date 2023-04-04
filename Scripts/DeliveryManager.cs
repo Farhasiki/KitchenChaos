@@ -1,15 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DeliveryManager : MonoBehaviour{
     public static DeliveryManager Instance {get; private set;}
-    [SerializeField] RecipeListSO recipeListSO;
-    private List<RecipeSO> waitingRecipeSOList;
 
+    public event EventHandler OnRecipeSpawned;
+    public event EventHandler OnRecipeCompleted;
+
+    [SerializeField] RecipeListSO recipeListSO;
+    
+    private List<RecipeSO> waitingRecipeSOList;
     private float spawnRecipeTimer;
-    private float spawnRecipeTimerMax = 5f;
+    private float spawnRecipeTimerMax = 6f;
     private int spawnrecipeAmount; 
-    private int spawnrecipeAmountMax = 4; 
+    private int spawnrecipeAmountMax = 5; 
 
     private void Awake() {
         Instance = this;
@@ -22,9 +27,10 @@ public class DeliveryManager : MonoBehaviour{
             spawnRecipeTimer = spawnRecipeTimerMax;
             if(spawnrecipeAmount < spawnrecipeAmountMax){
                 spawnrecipeAmount ++ ;
-                RecipeSO waitingRecipeSO = recipeListSO.RecipeSOList[Random.Range(0,recipeListSO.RecipeSOList.Count)];
-                Debug.Log(waitingRecipeSO.recipeName);
+
+                RecipeSO waitingRecipeSO = recipeListSO.RecipeSOList[UnityEngine.Random.Range(0,recipeListSO.RecipeSOList.Count)];
                 waitingRecipeSOList.Add(waitingRecipeSO);
+                OnRecipeSpawned?.Invoke(this,EventArgs.Empty);
             }
             
         }
@@ -37,6 +43,9 @@ public class DeliveryManager : MonoBehaviour{
             if(CheckRecipe(waitingRecipeSOList[i],plateRecipe)){//相同的hash值
                 Debug.Log("Player delivered the correct recipe!");
                 waitingRecipeSOList.RemoveAt(i);
+
+                OnRecipeCompleted?.Invoke(this,EventArgs.Empty);
+
                 return ;
             }
         }
@@ -44,8 +53,10 @@ public class DeliveryManager : MonoBehaviour{
     }
 
     private bool CheckRecipe(RecipeSO recipeSO1,RecipeSO recipeSO2){
-        Debug.Log("recipeSO1" + recipeSO1.GetHashCode());
-        Debug.Log("recipeSO2" + recipeSO2.GetHashCode());
         return recipeSO1.GetHashCode() == recipeSO2.GetHashCode();
+    }
+
+    public List<RecipeSO> GetWaitingRecipeSOList(){
+        return waitingRecipeSOList;
     }
 }
