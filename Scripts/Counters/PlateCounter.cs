@@ -35,7 +35,15 @@ public class PlateCounter : BaseCounter{
                 OnPlateRemove?.Invoke(this,EventArgs.Empty);
             }
         }else{
-            //if(player.GetKitchenObject().TryGetPlate())
+            if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject) && plateKitchenObject.IsEmpty()){
+                player.GetKitchenObject().DestroySelf();
+                if(plateSpawnedAmount < plateSpawnedAmountMax){
+                    plateSpawnedAmount ++;
+                    //生成盘子
+
+                    OnPlateSpawned?.Invoke(this,EventArgs.Empty);
+                }
+            }
         }
     }
 }

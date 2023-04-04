@@ -43,4 +43,8 @@ using System;
     public List<KitchenObjectSO> GetKitchenObjectSOList(){
         return kitchenObjectSOList;
     }
+
+    public bool IsEmpty(){
+        return kitchenObjectSOList.Count == 0;
+    }
 }
