@@ -13,7 +13,6 @@ public class DeliveryManagerSingleUI : MonoBehaviour{
     private void Awake() {
         iconTemplate.gameObject.SetActive(false);
     }
-
     
     // 用 RecipeSO 对象设置 UI 界面中的食谱名称文本框
     public void SetRecipeSO(RecipeSO recipeSO){

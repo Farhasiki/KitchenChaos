@@ -7,6 +7,8 @@ public class DeliveryManager : MonoBehaviour{
 
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
+    public event EventHandler OnRecipeFailed;
+    public event EventHandler OnRecipeSuccess;
 
     [SerializeField] RecipeListSO recipeListSO;
     
@@ -48,14 +50,20 @@ public class DeliveryManager : MonoBehaviour{
             if(CheckRecipe(waitingRecipeSOList[i],plateRecipe)){//相同的hash值
                 // 若匹配，则删除待做菜单列表中对应的配方
                 waitingRecipeSOList.RemoveAt(i);
+                spawnrecipeAmount--;//减少当前生成的食谱数量
+
                 // 触发OnRecipeCompleted事件
                 OnRecipeCompleted?.Invoke(this,EventArgs.Empty);
+                
+                OnRecipeSuccess?.Invoke(this,EventArgs.Empty);
+
                 // 返回
                 return ;
             }
         }
         // 若不匹配，则在控制台输出错误信息
         Debug.Log("Player did not delivered the correct recipe!");
+        OnRecipeFailed?.Invoke(this,EventArgs.Empty);
     }
 
     private bool CheckRecipe(RecipeSO recipeSO1,RecipeSO recipeSO2){

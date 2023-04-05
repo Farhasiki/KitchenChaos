@@ -6,9 +6,11 @@ using UnityEngine;
 public class CuttingCounter: BaseCounter, IHasProgress{
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray;// 切菜品的食谱
 
-    private int cuttingProgress = 0;
+    public static event EventHandler OnAnyCut;
     public event EventHandler OnPlayerCuttingObject;
     public event EventHandler<IHasProgress.OnProgressChangeEventArgs> OnProgressChange;
+
+    private int cuttingProgress = 0;
     public override void Interact(Player player){
         // (Same method)意义同上方
         if(this.HaskitchenObject()){// (Counter has something) 柜台上有物品
@@ -46,7 +48,6 @@ public class CuttingCounter: BaseCounter, IHasProgress{
     /// 切菜交互
     /// </summary>
     public override void InteractAlternate(Player player){
-        // (Same method)意义同上方
         if(this.HaskitchenObject() ^ player.HaskitchenObject()){// (One of Player and Counter has something) 玩家和柜台有一个上有物品
             if(player.HaskitchenObject()){// (Player is carrying something)玩家手上有物品
                
@@ -57,7 +58,8 @@ public class CuttingCounter: BaseCounter, IHasProgress{
 
                 CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());//获取切菜食谱
                 cuttingProgress ++;
-
+                
+                OnAnyCut?.Invoke(this,EventArgs.Empty);
                 OnPlayerCuttingObject?.Invoke(this,EventArgs.Empty);
                 OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{// 触发事件
                     progressNormalized = cuttingProgress * 1f / cuttingRecipeSO.maxCuttingProgress
@@ -68,7 +70,7 @@ public class CuttingCounter: BaseCounter, IHasProgress{
 
                     GetKitchenObject().DestroySelf();
 
-                    SetKitchenObject(KitchenObject.SpawnKitchenObject(outputKitchenObject,this));
+                    KitchenObject.SpawnKitchenObject(outputKitchenObject,this);
                 }
             }
         }
