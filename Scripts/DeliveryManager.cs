@@ -22,33 +22,39 @@ public class DeliveryManager : MonoBehaviour{
     }
      
     private void Update() {
-        spawnRecipeTimer -= Time.deltaTime;
-        if(spawnRecipeTimer <= 0){
-            spawnRecipeTimer = spawnRecipeTimerMax;
-            if(spawnrecipeAmount < spawnrecipeAmountMax){
-                spawnrecipeAmount ++ ;
+        spawnRecipeTimer -= Time.deltaTime; // 减去上一帧到这一帧所用的时间，更新生成食谱的计时器
+        if(spawnRecipeTimer <= 0){ // 当计时器达到0时，生成一个新的食谱
+            spawnRecipeTimer = spawnRecipeTimerMax; // 重置计时器
+            if(spawnrecipeAmount < spawnrecipeAmountMax){ // 如果当前生成的食谱数量小于最大数量
+                spawnrecipeAmount ++ ; // 增加当前生成的食谱数量
 
-                RecipeSO waitingRecipeSO = recipeListSO.RecipeSOList[UnityEngine.Random.Range(0,recipeListSO.RecipeSOList.Count)];
-                waitingRecipeSOList.Add(waitingRecipeSO);
-                OnRecipeSpawned?.Invoke(this,EventArgs.Empty);
-            }
-            
+                // 随机获取一个待做食谱
+                RecipeSO waitingRecipeSO = recipeListSO.RecipeSOList[UnityEngine.Random.Range(0,recipeListSO.RecipeSOList.Count)]; 
+                waitingRecipeSOList.Add(waitingRecipeSO); // 将待做食谱添加到待做食谱列表中
+                OnRecipeSpawned?.Invoke(this,EventArgs.Empty); // 触发食谱生成事件
+            }       
         }
     }
 
+
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject){
+        // 根据传递的盘子厨房物体，生成一个临时的配方
         RecipeSO plateRecipe = ScriptableObject.CreateInstance<RecipeSO>();
         plateRecipe.kitchenObjectSOList = plateKitchenObject.GetKitchenObjectSOList();
+        
+        // 遍历待做菜单列表
         for(int i = 0; i < waitingRecipeSOList.Count; ++i){
+            // 检查该配方与待做菜单列表中的配方是否匹配
             if(CheckRecipe(waitingRecipeSOList[i],plateRecipe)){//相同的hash值
-                Debug.Log("Player delivered the correct recipe!");
+                // 若匹配，则删除待做菜单列表中对应的配方
                 waitingRecipeSOList.RemoveAt(i);
-
+                // 触发OnRecipeCompleted事件
                 OnRecipeCompleted?.Invoke(this,EventArgs.Empty);
-
+                // 返回
                 return ;
             }
         }
+        // 若不匹配，则在控制台输出错误信息
         Debug.Log("Player did not delivered the correct recipe!");
     }
 

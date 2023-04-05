@@ -26,15 +26,21 @@ public class DeliveryManagerUI : MonoBehaviour{
     }
 
     private void UpdateVisual(){
+        // 销毁除模板以外的UI元素
         foreach( Transform child in container){
-            if(child == recipeTemplate)continue;
+            if(child == recipeTemplate) continue;
             Destroy(child.gameObject);
         }
         
+        // 生成等待中的食谱UI元素
         foreach(RecipeSO recipeSO in DeliveryManager.Instance.GetWaitingRecipeSOList()){
-            Transform recipeTransform = Instantiate(recipeTemplate,container);
+            // 实例化食谱UI模板并添加到父容器
+            Transform recipeTransform = Instantiate(recipeTemplate, container);
+            // 激活该UI元素
             recipeTransform.gameObject.SetActive(true);
+            // 设置食谱数据
             recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipeSO(recipeSO);
         }
     }
+
 }
