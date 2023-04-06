@@ -46,7 +46,6 @@ public class KitchenObject : MonoBehaviour
 
     public void DestroySelf(){
         GetKitchenObjectParent().ClearKitchenObject();
-
         Destroy(gameObject);
     }
     
@@ -58,13 +57,12 @@ public class KitchenObject : MonoBehaviour
     /// <param name="kitchenObjectParent">生成位置</param>
     /// <returns>生成的物体</returns>
     public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent){
-        Transform kitchenObjectransform = Instantiate(kitchenObjectSO.prefab);
-        KitchenObject kitchenObject = kitchenObjectransform.GetComponent<KitchenObject>();
-        
-        kitchenObject.SetKitchenObjectParent(kitchenObjectParent);//生成物品到物体载体上
-
+        // 实例化一个预制件
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
+        // 获取生成的物品的 KitchenObject 组件
+        KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+        // 设置物品的物体载体
+        kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
         return kitchenObject;
     }
-
-
 }

@@ -53,27 +53,50 @@ public class SoundManager : MonoBehaviour{
     }
 
 
+    // 它会在 "CuttingCounter" 的任何一个切割事件被触发时被调用
     private void CuttingCounter_OnAnyCut(object sender, EventArgs e){
+        // 将发送者（即 "CuttingCounter" 实例）转换为 "CuttingCounter" 类型
         CuttingCounter cuttingCounter = sender as CuttingCounter;
-        PlaySound(audioClipRefsSO.chop,cuttingCounter.transform.position);
+        // 播放切割音效
+        PlaySound(audioClipRefsSO.chop, cuttingCounter.transform.position);
     }
 
+
+    // 当一个食谱无法被成功配送时被调用
     private void DeliveryManager_OnRecipeFailed(object sender, EventArgs e){
+        // 获取 "DeliveryCounter" 的实例
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
-        PlaySound(audioClipRefsSO.deliveryFail,deliveryCounter.transform.position);
+        // 播放配送失败的音效
+        PlaySound(audioClipRefsSO.deliveryFail, deliveryCounter.transform.position);
     }
+
+    // 当一个食谱成功被配送时被调用
     private void DeliveryManager_OnRecipeSuccess(object sender, EventArgs e){
+        // 获取 "DeliveryCounter" 的实例
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
-        PlaySound(audioClipRefsSO.deliverySuccess,deliveryCounter.transform.position);
+        // 播放配送成功的音效
+        PlaySound(audioClipRefsSO.deliverySuccess, deliveryCounter.transform.position);
     }
+
+    // 这个方法用于播放音效，传入一个音效剪辑数组、位置和音量参数
     private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1){
-        PlaySound(audioClipArray[UnityEngine.Random.Range(0,audioClipArray.Length)],position,volume);
+        // 从音效剪辑数组中随机选择一个音效剪辑
+        AudioClip clip = audioClipArray[UnityEngine.Random.Range(0, audioClipArray.Length)];
+        // 调用重载的 PlaySound 方法，传入选定的音效剪辑、位置和音量参数
+        PlaySound(clip, position, volume);
     }
+
+    // 这个方法用于在指定的位置播放音效
     private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1){
-        AudioSource.PlayClipAtPoint(audioClip,position,volume);
+        // 调用 AudioSource 类的静态方法 PlayClipAtPoint，在指定位置播放音效剪辑
+        AudioSource.PlayClipAtPoint(audioClip, position, volume);
     }
+
     
+    // 这个方法用于在指定位置播放脚步声
     public void PlayFootstepsSound(Vector3 position, float volume){
-        PlaySound(audioClipRefsSO.footstep,position,volume);
+        // 调用 PlaySound 方法，传入脚步声音效剪辑以及指定位置和音量
+        PlaySound(audioClipRefsSO.footstep, position, volume);
     }
+
 }
