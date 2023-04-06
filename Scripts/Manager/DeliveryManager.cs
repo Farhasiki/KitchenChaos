@@ -16,7 +16,8 @@ public class DeliveryManager : MonoBehaviour{
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 6f;
     private int spawnrecipeAmount; 
-    private int spawnrecipeAmountMax = 5; 
+    private int spawnrecipeAmountMax = 10; 
+    private int successFulRecipesAmount = 0;
 
     private void Awake() {
         Instance = this;
@@ -50,7 +51,7 @@ public class DeliveryManager : MonoBehaviour{
             if(CheckRecipe(waitingRecipeSOList[i],plateRecipe)){//相同的hash值
                 // 若匹配，则删除待做菜单列表中对应的配方
                 waitingRecipeSOList.RemoveAt(i);
-                spawnrecipeAmount--;//减少当前生成的食谱数量
+                successFulRecipesAmount ++;
 
                 // 触发OnRecipeCompleted事件
                 OnRecipeCompleted?.Invoke(this,EventArgs.Empty);
@@ -72,5 +73,9 @@ public class DeliveryManager : MonoBehaviour{
 
     public List<RecipeSO> GetWaitingRecipeSOList(){
         return waitingRecipeSOList;
+    }
+    
+    public int GetSuccessfulRcipesAmount(){
+        return successFulRecipesAmount;
     }
 }
