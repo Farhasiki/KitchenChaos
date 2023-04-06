@@ -17,9 +17,9 @@ public class GameManager : MonoBehaviour{
     }
 
     private State state;
-    private float waitingToStartTimer = 2f;
+    private float waitingToStartTimer = .5f;
     private float countdownToStartTimer = 3f;
-    private float gamePlayingTimer = 10f;
+    private float gamePlayingTimer = 120f;
     private float gamePlayingTimerMax = 10f;
 
     private void Awake() {
