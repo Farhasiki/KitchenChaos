@@ -15,8 +15,6 @@ public class GameOverUI : MonoBehaviour{
     private void GameManager_OnStateChange(object sender, EventArgs e){
         // 检查游戏是否结束
         if(GameManager.Instance.IsGameOver()){
-            // 如果游戏结束，将时间缩放系数设为 0
-            Time.timeScale = 0;
             // 将交付管理器中成功配送的食谱数量设置为文本框的文本
             RecipeDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRcipesAmount().ToString();
             // 显示该 UI 面板

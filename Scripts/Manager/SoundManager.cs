@@ -5,10 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour{
+
+    private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
     public static SoundManager Instance {get; set;}
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
+    private float volume = 1f;
 
     private void Awake() {
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME,1f);
         Instance = this;
     }
     private void Start() {
@@ -94,9 +98,20 @@ public class SoundManager : MonoBehaviour{
 
     
     // 这个方法用于在指定位置播放脚步声
-    public void PlayFootstepsSound(Vector3 position, float volume){
+    public void PlayFootstepsSound(Vector3 position, float volumeMultipliter = 1){
         // 调用 PlaySound 方法，传入脚步声音效剪辑以及指定位置和音量
-        PlaySound(audioClipRefsSO.footstep, position, volume);
+        PlaySound(audioClipRefsSO.footstep, position, volume * volumeMultipliter);
     }
-
+    
+    public void ChangeValume(){
+        volume += .1f;
+        if(volume > 1.09){
+            volume = 0f;
+        }
+        PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME,volume);
+        PlayerPrefs.Save();
+    }
+    public float GetVolume(){
+        return volume;
+    }
 }
