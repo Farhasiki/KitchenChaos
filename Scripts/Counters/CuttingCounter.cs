@@ -7,6 +7,9 @@ public class CuttingCounter: BaseCounter, IHasProgress{
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray;// 切菜品的食谱
 
     public static event EventHandler OnAnyCut;
+    new public static void ResetStaticData(){
+        OnAnyCut = null;
+    }
     public event EventHandler OnPlayerCuttingObject;
     public event EventHandler<IHasProgress.OnProgressChangeEventArgs> OnProgressChange;
 

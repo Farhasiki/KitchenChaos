@@ -26,10 +26,6 @@ public class GameOverUI : MonoBehaviour{
             Hide();
         }
     }
-
-
-    private void Update() {
-    }
     private void Show(){
         gameObject.SetActive(true);
     }

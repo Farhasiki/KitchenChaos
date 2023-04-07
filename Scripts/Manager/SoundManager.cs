@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour{
         // 订阅事件，当物品放置区域触发任意物品放置事件时，调用BaseCounter_OnAnyObjectPlacedHere方法
         BaseCounter.OnAnyObjectPlacedHere += BaseCounter_OnAnyObjectPlacedHere;
         // 订阅事件，当垃圾桶触发任意物品丢弃事件时，调用TrashCounter_OnAnyObjectTrashed方法
-        TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
+        TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed; 
     }
 
     // 当任何物体被扔进垃圾桶时触发

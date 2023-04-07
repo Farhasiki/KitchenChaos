@@ -8,6 +8,9 @@ public class BaseCounter : MonoBehaviour,IKitchenObjectParent
     private KitchenObject kitchenObject;//当前柜台上放的物品
 
     public static event EventHandler OnAnyObjectPlacedHere;
+    public static void ResetStaticData(){
+        OnAnyObjectPlacedHere = null;
+    }
     
     public virtual void Interact(Player player){
         Debug.Log("BaseCounter.Interact ");
