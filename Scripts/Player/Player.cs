@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -94,18 +95,23 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         float playerRadius = .7f;
         float playerHeight = 2f;
         bool canMove = !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDir,moveDistance);
+        if(Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDir,out RaycastHit raycastHit,moveDistance)){
+            Debug.Log(raycastHit.collider.name);
+            Debug.Log(canMove);
+            Debug.Log(moveDir);
+        }
         
         //处理移动方向
         if(!canMove){ // 目标方向不能移动
             //分解移动向量 尝试向X方向移动
             Vector3 moveDirX = new Vector3(moveDir.x,0,0).normalized;
-            canMove = moveDirX.x != 0 && !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirX,moveDistance);
+            canMove = (moveDirX.x > .5f || moveDirX.x < -.5f)  && !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirX,moveDistance);
             if(canMove){ //可以在X方向移动
                 moveDir = moveDirX;
             }else{ //X 方向不能行走
                 //尝试向Z轴运动
                 Vector3 moveDirZ = new Vector3(0,0,moveDir.z).normalized;
-                canMove = moveDirZ.z != 0 && !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirZ,moveDistance);
+                canMove = (moveDirZ.z > .5f || moveDirZ.z < -.5f) && !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDirZ,moveDistance);
                 if(canMove){ //可以向Z方向移动
                     moveDir = moveDirZ;
                 }else{ //两个方向都不能移动

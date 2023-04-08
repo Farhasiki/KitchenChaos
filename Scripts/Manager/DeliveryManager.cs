@@ -16,7 +16,7 @@ public class DeliveryManager : MonoBehaviour{
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 6f;
     private int spawnrecipeAmount; 
-    private int spawnrecipeAmountMax = 10; 
+    private int spawnrecipeAmountMax = 5; 
     private int successFulRecipesAmount = 0;
 
     private void Awake() {
