@@ -25,6 +25,7 @@ public class DeliveryManager : MonoBehaviour{
     }
      
     private void Update() {
+        if(!GameManager.Instance.IsGamePlaying())return; 
         spawnRecipeTimer -= Time.deltaTime; // 减去上一帧到这一帧所用的时间，更新生成食谱的计时器
         if(spawnRecipeTimer <= 0){ // 当计时器达到0时，生成一个新的食谱
             spawnRecipeTimer = spawnRecipeTimerMax; // 重置计时器
