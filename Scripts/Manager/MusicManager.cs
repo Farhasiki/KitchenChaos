@@ -16,14 +16,15 @@ public class MusicManager : MonoBehaviour{
         audioSource.volume = volume;
     }
     public void ChangeValume(){
-        volume += .1f;
-        if(volume > 1.09){
+        volume += .1f; //增加音量
+        if(volume > 1.09){ //如果超过最大音量，归零
             volume = 0f;
         }
-        audioSource.volume = volume;
-        PlayerPrefs.SetFloat(PLAYER_PREFS_MUSIC_VOLUME,volume);
-        PlayerPrefs.Save();
+        audioSource.volume = volume; //将音量值应用到 AudioSource 上
+        PlayerPrefs.SetFloat(PLAYER_PREFS_MUSIC_VOLUME,volume); //将音量值存储到 PlayerPrefs 中
+        PlayerPrefs.Save(); //保存 PlayerPrefs 中的数据
     }
+
     public float GetVolume(){
         return volume;
     }

@@ -10,11 +10,13 @@ public class SoundManager : MonoBehaviour{
     public static SoundManager Instance {get; set;}
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
     private float volume = 1f;
-
     private void Awake() {
-        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME,1f);
+        // 将该脚本对象赋值给 Instance 静态变量
         Instance = this;
+        // 从 PlayerPrefs 中获取存储的音效音量值，如果没有存储过，则使用默认值 1f
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);
     }
+
     private void Start() {
         // 订阅事件，当菜单配送管理器触发菜谱失败事件时，调用DeliveryManager_OnRecipeFailed方法
         DeliveryManager.Instance.OnRecipeFailed += DeliveryManager_OnRecipeFailed;
@@ -103,14 +105,20 @@ public class SoundManager : MonoBehaviour{
         PlaySound(audioClipRefsSO.footstep, position, volume * volumeMultipliter);
     }
     
+    // 用于调整音效音量
     public void ChangeValume(){
+        // 每次调用方法，将音效音量增加 0.1
         volume += .1f;
+        // 检查音效音量是否已达到最大值（1.09）
         if(volume > 1.09){
+            // 若已达到最大值，则将音效音量重置为 0
             volume = 0f;
         }
+        // 使用 PlayerPrefs 将更新后的音效音量保存到本地
         PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME,volume);
         PlayerPrefs.Save();
     }
+
     public float GetVolume(){
         return volume;
     }
