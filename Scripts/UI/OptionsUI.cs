@@ -26,6 +26,7 @@ public class OptionsUI : MonoBehaviour{
     [SerializeField] private TextMeshProUGUI interactAltText; 
     [SerializeField] private TextMeshProUGUI pauseText; 
     [SerializeField] private Transform ReBindingUI; 
+    private Action onCloseButtonAction;
 
     private void Awake() {
         soundEffectsButton.onClick.AddListener( () => {
@@ -37,6 +38,7 @@ public class OptionsUI : MonoBehaviour{
             UpdateVisual();
         });
         closeButton.onClick.AddListener(() => {
+            onCloseButtonAction?.Invoke();
             Hide();
         });
         moveUpButton.onClick.AddListener(() => {ReBinding(GameInput.Binding.Move_Up);});
@@ -70,8 +72,10 @@ public class OptionsUI : MonoBehaviour{
         interactAltText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
         pauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
     } 
-    public void Show(){
+    public void Show(Action onCloseButtonAction){
         gameObject.SetActive(true);
+        soundEffectsButton.Select();
+        this.onCloseButtonAction = onCloseButtonAction;
     }
     private void Hide(){
         gameObject.SetActive(false);
