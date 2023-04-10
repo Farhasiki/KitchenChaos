@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,5 +17,4 @@ public class GameMenuUI : MonoBehaviour{
         // 初始化时间缩放
         Time.timeScale = 1f;
     }
-
 }

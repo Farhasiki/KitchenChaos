@@ -23,7 +23,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
     private bool isWalking = false;//正在移动
     private BaseCounter selectedCounter; // 选中的柜台
     private KitchenObject kitchenObject;//手里的物品
-
     private void Awake() {
         if(Instance != null){
             Debug.LogError("多个实例");
@@ -95,11 +94,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         float playerRadius = .7f;
         float playerHeight = 2f;
         bool canMove = !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDir,moveDistance);
-        if(Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDir,out RaycastHit raycastHit,moveDistance)){
-            Debug.Log(raycastHit.collider.name);
-            Debug.Log(canMove);
-            Debug.Log(moveDir);
-        }
         
         //处理移动方向
         if(!canMove){ // 目标方向不能移动

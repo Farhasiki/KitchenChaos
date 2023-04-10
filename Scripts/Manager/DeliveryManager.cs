@@ -63,8 +63,6 @@ public class DeliveryManager : MonoBehaviour{
                 return ;
             }
         }
-        // 若不匹配，则在控制台输出错误信息
-        Debug.Log("Player did not delivered the correct recipe!");
         OnRecipeFailed?.Invoke(this,EventArgs.Empty);
     }
 

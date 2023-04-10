@@ -71,7 +71,7 @@ public class StoveCounter : BaseCounter, IHasProgress{
                         OnProgressChange?.Invoke(this,new IHasProgress.OnProgressChangeEventArgs{
                             progressNormalized = 0f
                         });
-                    }
+                    } 
                     break;
                 case State.Burned: // 烧焦状态
                     break;
@@ -171,5 +171,8 @@ public class StoveCounter : BaseCounter, IHasProgress{
             }
         }
         return null;
+    }
+    public bool IsFired(){
+        return state == State.Fried;
     }
 }

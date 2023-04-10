@@ -104,6 +104,13 @@ public class SoundManager : MonoBehaviour{
         // 调用 PlaySound 方法，传入脚步声音效剪辑以及指定位置和音量
         PlaySound(audioClipRefsSO.footstep, position, volume * volumeMultipliter);
     }
+
+    public void PlayCountdownSound(){
+        PlaySound(audioClipRefsSO.warning,Vector3.zero);
+    }
+    public void PlayStoveBurnWaningSound(Vector3 position){
+        PlaySound(audioClipRefsSO.warning,position);
+    }
     
     // 用于调整音效音量
     public void ChangeValume(){
