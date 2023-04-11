@@ -10,14 +10,17 @@ public class StoveBurnWarningUI : MonoBehaviour{
     }
 
     private void StoveCounter_OnProgressChange(object sender, IHasProgress.OnProgressChangeEventArgs e){
-        float burnShowProgressAmount = .5f;
-        bool show = stoveCounter.IsFired() && (e.progressNormalized >= burnShowProgressAmount);
+        float burnShowProgressAmount = .5f;  // 灶台开始显示火焰的进度阈值
+        
+        bool show = stoveCounter.IsFired() && (e.progressNormalized >= burnShowProgressAmount);  // 是否需要显示火焰
+
         if(show){
-            Show();
+            Show();  // 显示火焰
         }else{
-            Hide();
+            Hide();  // 隐藏火焰
         }
     }
+
     private void Show(){
         gameObject.SetActive(true);
     }

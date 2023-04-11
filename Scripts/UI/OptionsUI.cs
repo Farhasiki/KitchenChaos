@@ -88,10 +88,15 @@ public class OptionsUI : MonoBehaviour{
         ReBindingUI.gameObject.SetActive(false);
     }
     private void ReBinding(GameInput.Binding binding){
+        //重新绑定输入
         GameInput.Instance.Rebinding(binding,() => {
+            //隐藏重新绑定提示
             HidePressToRebindKey();
+            //更新输入可视化
             UpdateVisual();
         });
+        //显示重新绑定提示
         ShowPressToRebindKey();
     }
+
 }

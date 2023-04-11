@@ -20,14 +20,15 @@ public class ProgressUI : MonoBehaviour{
         Hide();
     }
     private void CuttingCounter_OnprogessChange(object sender, IHasProgress.OnProgressChangeEventArgs e){
-        progressBar.fillAmount = e.progressNormalized;
+        progressBar.fillAmount = e.progressNormalized; // 将进度条填充量设置为事件参数中的规范化进度量
 
-        if(progressBar.fillAmount == 0 || progressBar.fillAmount == 1){
-            Hide();
+        if(progressBar.fillAmount == 0 || progressBar.fillAmount == 1){ // 如果进度条填充量为0或1
+            Hide(); // 隐藏进度条
         }else{
-            Show();
+            Show(); // 显示进度条
         }
     }
+
     private void Show(){
         gameObject.SetActive(true);
     }

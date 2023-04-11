@@ -26,23 +26,25 @@ public class KitchenObject : MonoBehaviour
     /// </summary>
     /// <param name="kitchenObjectParent"></param>
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent){
-        if(this.kitchenObjectParent != null){//清空原柜台
-            this.kitchenObjectParent.ClearKitchenObject();
+        if(this.kitchenObjectParent != null){//检查是否已有父物体
+            this.kitchenObjectParent.ClearKitchenObject();//清空原父物体
         }
         //修改逻辑位置
-        this.kitchenObjectParent = kitchenObjectParent;
+        this.kitchenObjectParent = kitchenObjectParent;//设置新父物体
         if(kitchenObjectParent.HaskitchenObject()){
-            Debug.LogError("IKitchenObjectParent has object");
+            Debug.LogError("IKitchenObjectParent has object");//如果新父物体已有对象，输出错误信息
         }
-        kitchenObjectParent.SetKitchenObject(this);
+        kitchenObjectParent.SetKitchenObject(this);//设置自身为新父物体的对象
         //修改物理位置
         transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();//更改父物体
-        transform.localPosition = Vector3.zero;//更改坐标
-        transform.rotation = Quaternion.identity;
+        transform.localPosition = Vector3.zero;//将自身坐标重置为0
+        transform.rotation = Quaternion.identity;//将自身旋转重置为默认值
     }
+
     public IKitchenObjectParent GetKitchenObjectParent(){
-        return this.kitchenObjectParent;
+        return this.kitchenObjectParent;//返回父物体
     }
+
 
     public void DestroySelf(){
         GetKitchenObjectParent().ClearKitchenObject();
