@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlateIconSingleUI : MonoBehaviour{
+public class PlateIconSingleUI : BaseUI{
     [SerializeField] Image image;
 
     // 定义一个名为 SetKitchenObjectSO 的公共方法，该方法用于设置厨房物品对象的 KitchenObjectSO 属性

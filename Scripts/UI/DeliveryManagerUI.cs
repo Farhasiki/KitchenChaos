@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeliveryManagerUI : MonoBehaviour{
+public class DeliveryManagerUI : BaseUI{
     [SerializeField] Transform container;
     [SerializeField] Transform recipeTemplate;
 

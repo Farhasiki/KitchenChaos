@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GamePauseUI : MonoBehaviour{
+public class GamePauseUI : BaseUI{
 
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button resumeButton;
@@ -37,11 +37,8 @@ public class GamePauseUI : MonoBehaviour{
         }
     }
 
-    private void Show(){
-        gameObject.SetActive(true);
+    public override void Show(){
+        base.Show();
         resumeButton.Select();
-    }
-    private void Hide(){
-        gameObject.SetActive(false);
     }
 }

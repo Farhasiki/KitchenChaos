@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class OptionsUI : MonoBehaviour{
+public class OptionsUI : BaseUI{
     [SerializeField] private Button soundEffectsButton; 
     [SerializeField] private Button musicButton; 
     [SerializeField] private Button closeButton; 
@@ -73,12 +73,9 @@ public class OptionsUI : MonoBehaviour{
         pauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
     } 
     public void Show(Action onCloseButtonAction){
-        gameObject.SetActive(true);
+        base.Show();
         soundEffectsButton.Select();
         this.onCloseButtonAction = onCloseButtonAction;
-    }
-    private void Hide(){
-        gameObject.SetActive(false);
     }
 
     private void ShowPressToRebindKey(){

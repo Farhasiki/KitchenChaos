@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 
-public class GameOverUI : MonoBehaviour{
+public class GameOverUI : BaseUI{
     [SerializeField] private TextMeshProUGUI RecipeDeliveredText;
     private void Start() {
         GameManager.Instance.OnStateChange += GameManager_OnStateChange;
@@ -24,10 +24,4 @@ public class GameOverUI : MonoBehaviour{
             Hide();
         }
     }
-    private void Show(){
-        gameObject.SetActive(true);
-    }
-    private void Hide(){
-        gameObject.SetActive(false);
-    } 
 }

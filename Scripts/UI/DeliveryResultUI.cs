@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class DeliveryResultUI : MonoBehaviour{
+public class DeliveryResultUI : BaseUI{
     private const string POPUP = "Popup";
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Image iconImage;

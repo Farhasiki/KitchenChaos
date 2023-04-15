@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlateIconUI : MonoBehaviour{
+public class PlateIconUI : BaseUI{
     [SerializeField] private PlateKitchenObject plateKitchenObject;
     [SerializeField] Transform iconTemplate;
     

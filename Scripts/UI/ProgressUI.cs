@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProgressUI : MonoBehaviour{
+public class ProgressUI : BaseUI{
     [SerializeField] GameObject hasProgressObject;
     private IHasProgress hasProgress;
     [SerializeField] Image progressBar;
@@ -27,12 +27,5 @@ public class ProgressUI : MonoBehaviour{
         }else{
             Show(); // 显示进度条
         }
-    }
-
-    private void Show(){
-        gameObject.SetActive(true);
-    }
-    private void Hide(){
-        gameObject.SetActive(false);
     }
 }

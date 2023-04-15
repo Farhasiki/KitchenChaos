@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameMenuUI : MonoBehaviour{
+public class GameMenuUI : BaseUI{
     [SerializeField] private Button playButton;
     [SerializeField] private Button quitButton;
 

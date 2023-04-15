@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveBurnWarningUI : MonoBehaviour{
+public class StoveBurnWarningUI : BaseUI{
     [SerializeField]private StoveCounter stoveCounter;
     private void Start() {
         stoveCounter.OnProgressChange += StoveCounter_OnProgressChange;
@@ -19,12 +19,5 @@ public class StoveBurnWarningUI : MonoBehaviour{
         }else{
             Hide();  // 隐藏火焰
         }
-    }
-
-    private void Show(){
-        gameObject.SetActive(true);
-    }
-    private void Hide(){
-        gameObject.SetActive(false);
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveProgressBarUI : MonoBehaviour{
+public class StoveProgressBarUI : BaseUI{
     [SerializeField]private StoveCounter stoveCounter;
     private const string IS_FLASHING = "IsFlashing";
 

@@ -2,7 +2,7 @@ using System.Globalization;
 using System;
 using UnityEngine;
 using TMPro;
-public class GameStartCountdownUI : MonoBehaviour{
+public class GameStartCountdownUI : BaseUI{
     [SerializeField] private TextMeshProUGUI countdownText;
     private Animator animator;
     private int lastCountdownNumber;
@@ -34,12 +34,5 @@ public class GameStartCountdownUI : MonoBehaviour{
             SoundManager.Instance.PlayCountdownSound();
         }
         lastCountdownNumber = countdownNumber;
-    }
-
-    private void Show(){
-        gameObject.SetActive(true);
-    }
-    private void Hide(){
-        gameObject.SetActive(false);
     }
 }

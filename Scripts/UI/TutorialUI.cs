@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using TMPro;
 
-public class TutorialUI : MonoBehaviour{
+public class TutorialUI : BaseUI{
     [SerializeField] private TextMeshProUGUI keyMoveUpText;
     [SerializeField] private TextMeshProUGUI keyMoveDownText;
     [SerializeField] private TextMeshProUGUI keyMoveLeftText;
@@ -35,13 +35,5 @@ public class TutorialUI : MonoBehaviour{
         keyInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Interact);
         keyInteractAltText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
         keyPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
-    }
-
-    private void Show(){
-        gameObject.SetActive(true);
-    }
-
-    private void Hide(){
-        gameObject.SetActive(false);
     }
 }
