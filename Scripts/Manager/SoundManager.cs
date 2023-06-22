@@ -55,7 +55,7 @@ public class SoundManager : MonoBehaviour{
         // 获取当前场景中唯一的玩家对象
         Player player = Player.Instance;
         // 播放物品捡起的声音效果
-        PlaySound(audioClipRefsSO.objectPickup, player.transform.position);
+        PlaySound(audioClipRefsSO.objectPickup, player.transform.position); 
     }
 
 

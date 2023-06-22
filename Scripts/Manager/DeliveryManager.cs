@@ -16,8 +16,10 @@ public class DeliveryManager : MonoBehaviour{
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 6f;
     private int spawnrecipeAmount; 
-    private int spawnrecipeAmountMax = 5; 
+    private int spawnrecipeAmountMax = 10; 
     private int successFulRecipesAmount = 0;
+    private int showrecipeAmountMax = 5;
+    private int showrecipeAmount = 0;
 
     private void Awake() {
         Instance = this;
@@ -29,8 +31,8 @@ public class DeliveryManager : MonoBehaviour{
         spawnRecipeTimer -= Time.deltaTime; // 减去上一帧到这一帧所用的时间，更新生成食谱的计时器
         if(spawnRecipeTimer <= 0){ // 当计时器达到0时，生成一个新的食谱
             spawnRecipeTimer = spawnRecipeTimerMax; // 重置计时器
-            if(spawnrecipeAmount < spawnrecipeAmountMax){ // 如果当前生成的食谱数量小于最大数量
-                spawnrecipeAmount ++ ; // 增加当前生成的食谱数量
+            if(showrecipeAmount < showrecipeAmountMax){ // 如果当前生成的食谱数量小于最大数量
+                showrecipeAmount ++ ; // 增加当前生成的食谱数量
 
                 // 随机获取一个待做食谱
                 RecipeSO waitingRecipeSO = recipeListSO.RecipeSOList[UnityEngine.Random.Range(0,recipeListSO.RecipeSOList.Count)]; 
@@ -53,7 +55,8 @@ public class DeliveryManager : MonoBehaviour{
                 // 若匹配，则删除待做菜单列表中对应的配方
                 waitingRecipeSOList.RemoveAt(i);
                 successFulRecipesAmount ++;
-
+                showrecipeAmount --;
+                
                 // 触发OnRecipeCompleted事件
                 OnRecipeCompleted?.Invoke(this,EventArgs.Empty);
                 
