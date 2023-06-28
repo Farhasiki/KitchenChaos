@@ -1,9 +1,6 @@
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
- 
+
 public class Player : MonoBehaviour, IKitchenObjectParent{
     public static Player Instance {get; private set; }
 
@@ -14,7 +11,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
     }
 
     [SerializeField] private float moveSpeed = 8f;
-    [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;//接收物品位置
 
@@ -23,18 +19,22 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
     private bool isWalking = false;//正在移动
     private BaseCounter selectedCounter; // 选中的柜台
     private KitchenObject kitchenObject;//手里的物品
+    private Vector3 deltaRotate = new Vector3(EPS,0,EPS);
     private void Awake() {
         if(Instance != null){
             Debug.LogError("多个实例");
         }
         Instance = this;
     }
-
+    // 默认 按键方便识别代码
     private void Start() {
-        gameInput.OnInteractAction += GameInput_OnInteractAction;//注册
-        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;// 注册
+        // e 按键交互 
+        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;//注册
+        // f 按键交互
+        GameInput.Instance.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;// 注册
     }
     
+    // f 键交互入口
     private void GameInput_OnInteractAlternateAction(object sender, EventArgs e){
         if(!GameManager.Instance.IsGamePlaying())return ;
         if(selectedCounter != null){
@@ -42,6 +42,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         }
     }
 
+    // e 键交互入口
     private void GameInput_OnInteractAction(object sender, EventArgs e){
         if(!GameManager.Instance.IsGamePlaying())return ;
         if(selectedCounter != null){
@@ -51,7 +52,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
 
 
     private void Update() {
+        // 移动
         HandleMovement();
+        // 检测交互
         HandleInteractions();
     }
 
@@ -63,11 +66,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
     /// 处理交互
     /// </summary>
     private void HandleInteractions(){
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(inputVector.x,0,inputVector.y);
-
+        Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(inputVector.x,0,inputVector.y); // 冗余变量
+        
+        // 如果没移动
         if(moveDir != Vector3.zero){
-             lastInteractDir = moveDir;
+            lastInteractDir = moveDir;
         }
         float interactDistance = 2f;
         if(Physics.Raycast(transform.position,lastInteractDir, out RaycastHit raycastHit,interactDistance,countersLayerMask)){
@@ -75,10 +79,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
                 if(baseCounter != selectedCounter){
                     SetSelectedCounter(baseCounter);
                 }
-            }else {
+            } else {
                 SetSelectedCounter(null);
             }
-        }else{
+        } else {
             SetSelectedCounter(null);
         }
     }
@@ -86,14 +90,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
     /// 处理移动
     /// </summary>
     private void HandleMovement(){
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();//创建输入的二维向量，在逻辑上与移动向量分离
+        Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();//创建输入的二维向量，在逻辑上与移动向量分离
         //单独创建移动向量
         Vector3 moveDir = new Vector3(inputVector.x,0,inputVector.y);
-
+        
         float moveDistance = Time.deltaTime * moveSpeed;
         float playerRadius = .7f;
         float playerHeight = 2f;
-        bool canMove = !Physics.CapsuleCast(transform.position,transform.position + Vector3.up * playerHeight,playerRadius,moveDir,moveDistance);
+        bool canMove = !Physics.CapsuleCast(transform.position,
+                    transform.position + Vector3.up * playerHeight,playerRadius,moveDir,moveDistance);
         
         //处理移动方向
         if(!canMove){ // 目标方向不能移动
@@ -117,7 +122,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
         
         isWalking = moveDir != Vector3.zero;
         float rotateSpeed = 20f;
-        this.transform.forward = Vector3.Lerp(this.transform.forward,moveDir + new Vector3(EPS,0,EPS),Time.deltaTime * rotateSpeed);
+        this.transform.forward = Vector3.Lerp(this.transform.forward,moveDir + deltaRotate, Time.deltaTime * rotateSpeed);
     }
 
     private void SetSelectedCounter(BaseCounter selectedCounter){
@@ -135,7 +140,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent{
 
     public void SetKitchenObject(KitchenObject kitchenObject){
         this.kitchenObject = kitchenObject;
-
         if(kitchenObject != null){
             OnPickupSomething?.Invoke(this,EventArgs.Empty);
         }

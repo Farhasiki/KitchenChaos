@@ -1,6 +1,3 @@
-using System.Xml;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
@@ -12,7 +9,7 @@ public class GameInput : MonoBehaviour{
     public event EventHandler OnPauseAction;
     public event EventHandler OnInteractAlternateAction;
     public event EventHandler OnBindingRebind;
-    private const string PLAYER_PREFS_BINDINGS = "IOnputBindings";
+    private const string PLAYER_PREFS_BINDINGS = "InputBindings";
 
     public enum Binding{
         Move_Up,

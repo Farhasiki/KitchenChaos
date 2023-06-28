@@ -358,7 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plateCouter: {fileID: 0}
-  CounterTopPoint: {fileID: 5042651763664549855}
+  counterTopPoint: {fileID: 0}
   plateVisualPrefab: {fileID: 7722670573966713082, guid: 46c223448a488ac4bbf2dacbef50fada,
     type: 3}
 --- !u!4 &5520831354805534905 stripped
